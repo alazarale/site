@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block blogs %}
+      <div class="col-sm-8 blog-main">
+       <div class="container">
+
+      <div class="blog-header">
+        <h1 class="blog-title">{{ post.title }}</h1>
+      </div>
+
+      <div class="row">
+          <div class="blog-post">
+            <p class="blog-post-meta">Published {{ post.publish }} By <a href="#">{{ post.author }}</a></p>
+            <hr>
+            <p>{{ post.body|linebreaks }}</p>
+            <p>
+                <a href="{% url 'blog:post_share' post.id %}">
+                    Share this post
+                </a>
+            </p>
+              <br>
+              <br>
+              {% with comments.count as total_comments %}
+                 <h2>
+                     {{ total_comments }} comment{{ total_comments|pluralize}}
+                 </h2>
+              {% endwith %}
+              {% for comment in comments %}
+                 <div>
+                     <br>
+                     <p>
+                         Comment {{ forloop.counter }} by {{ comment.name }}
+                         {{ comment.created }}
+                     </p>
+
+                     <h2>{{ comment.name }}</h2>
+                     {{ comment.body|linebreaks }}
+                 </div>
+              {% empty %}
+                   <p>There are no comments. Be the first to comment</p>
+              {% endfor %}
+              {% if new_comment %}
+                <h2>Your comment has been added</h2>
+              {% else %}
+                <br>
+                <h2>Add a new comment</h2>
+                <form action="." method="post">
+                    {{ comment_form.as_p }}
+                    {% csrf_token %}
+                    <p><input type="submit" value="Add comment"></p>
+                </form>
+              {% endif %}
+            <hr>
+
+          </div>
+          <!-- /.blog-sidebar -->
+
+      </div><!-- /.row -->
+
+    </div>
+
+          </div>
+{% endblock %}
